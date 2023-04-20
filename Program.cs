@@ -25,17 +25,48 @@ namespace CarRace
                 year = 1999,
                 speed = 120, // km/h
                 traveledDistance = 0,
-                raceTrackDistance= 10.0m,
+                raceTrackDistance= 12.0m,
                 racingTime = 0
             };
+
+
+
 
 
             Console.WriteLine("\nWelcome to the street race!");
 
             Console.WriteLine("\nPlease press enter to start the race");
             while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
-            await CarIsRunning(car1);
-            carStatus(car1);
+
+
+            //TODO: Put car methods in variable
+            //      Create a list of tasks, containing the car methods and objects
+            //      The program should only await for the list to run.
+
+            var car1Task = CarIsRunning(car1);
+            var car2Task = CarIsRunning(car2);
+
+            var raceTask = new List<Task> { car1Task, car2Task };
+
+            while (raceTask.Count > 0)
+            {
+                Task raceGoalLine = await Task.WhenAny(raceTask);
+                if (raceGoalLine == car1Task)
+                {
+                    Console.Write($"{car1.name} made it into goal!");
+                    Car carResult = car1Task.Result;
+                    carStatus(carResult);
+                }
+                else if (raceGoalLine == car2Task)
+                {
+                    Console.Write($"{car2.name} made it into goal!");
+                    Car carResult = car2Task.Result;
+                    carStatus(carResult);
+                }
+                await raceGoalLine;
+                raceTask.Remove(raceGoalLine);
+            }
+
             PleasePressEnter();
         }
 
@@ -57,7 +88,6 @@ namespace CarRace
 
                 if (car.traveledDistance >= car.raceTrackDistance)
                 {
-                    Console.WriteLine($"\n{car.name} has stopped ...");
                     return car;
                 }
             }
@@ -71,12 +101,15 @@ namespace CarRace
 
         static void carStatus(Car car)
         {
-            Console.WriteLine($"{car.name} has traveled {car.traveledDistance} km in {car.racingTime} seconds");
+            Console.WriteLine($"{car.name}\n" +
+                $"Travel distance {car.traveledDistance} km \n" +
+                $"Speed {car.speed} km/h\n" +
+                $"Race time: {car.racingTime} seconds\n");
         }
 
         static void PleasePressEnter()
         {
-            Console.WriteLine("\nPlease press enter to close.");
+            Console.WriteLine("\nPlease press enter");
             while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
         }
     }
