@@ -56,7 +56,7 @@ namespace CarRace
 
             Console.WriteLine("\nWelcome to the street race!");
 
-            Console.WriteLine("\nPlease press any key to start the race");
+            Console.WriteLine("\nPlease press any key to start the race\n");
             Console.ReadKey(true);
 
 
@@ -111,7 +111,7 @@ namespace CarRace
 
         static async Task<Car> CarIsRunning(Car car)
         {
-            Console.WriteLine($"\n{car.name} starts running ...");
+            Console.WriteLine($"{car.name} starts running ...");
             int RaceTime = 10;
             while (true)
             {
@@ -122,7 +122,7 @@ namespace CarRace
                 // when y km is met return car
 
                 car.traveledDistance += (0.1m * RaceTime);
-                car.racingTime += RaceTime;
+                car.racingTime += (0.1m * RaceTime);
 
 
                 if (car.traveledDistance >= car.raceTrackDistance)
@@ -148,21 +148,28 @@ namespace CarRace
 
         public static async Task CarStatus(List<Car> cars)
         {
-            while (true) 
+            bool carRunning = true;
+            while (carRunning) 
             {
                 //Maybe create a "Flag" in car object, when car has finished flag = true then break while loop.
 
-                //Console.ReadKey(true);
+                Console.ReadKey(true);
                 await Task.Delay(TimeSpan.FromSeconds(1));
-                Console.Clear();
+                //Console.Clear();
                 cars.ForEach(car =>
                 {
-                    Console.WriteLine($"{car.RemainingTime()} seconds remaining");
-                    Console.WriteLine($"{car.name} has been running for {car.racingTime} seconds and has traveled a distance of {car.traveledDistance} km");
+                    Console.WriteLine($"\n{car.name} has been running for {car.racingTime} seconds");
+                    Console.WriteLine($"Speed is {car.speed} km/h and has traveled a total distance of {car.traveledDistance} km");
+                    if (car.traveledDistance >= car.raceTrackDistance)
+                    {
+                        Console.WriteLine($"{car.name} has stopped\n");
+                        carRunning = false;
+                    }
                 });
                 Console.WriteLine();
+                
 
-                var totalRemaining = cars.Select(car => car.RemainingTime()).Sum();
+                //var totalRemaining = cars.Select(car => car.RemainingTime()).Sum();
 
                 //var totalRemaining = (from egg in eggs
                 //                     let remaining = egg.RemainingTime()

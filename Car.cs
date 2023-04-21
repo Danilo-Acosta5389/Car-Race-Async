@@ -8,22 +8,24 @@ namespace CarRace
 {
     public class Car
     {
-        public string name { get; set; }
-        public string brand { get; set; }
-        public string model { get; set; }
+        public string? name { get; set; }
+        public string? brand { get; set; }
+        public string? model { get; set; }
         public int year { get; set; }
         public int speed { get; set; }
 
         public decimal traveledDistance { get; set; }
         public decimal raceTrackDistance { get; set; }
-        public int racingTime { get; set; }
+        public decimal racingTime { get; set; }
 
-        public decimal RemainingTime()
-        {
-            // X = (Y - 20) * 1.33
-            // Y = done_temperature
-            return ((traveledDistance - 20) * 10) - racingTime;
-        }
+        public bool finishedRace { get; set; }
+
+        //public decimal TimePassed()
+        //{
+        //    // X = (Y - 20) * 1.33
+        //    // Y = done_temperature
+        //    return ((traveledDistance - 20) * 10) - racingTime;
+        //}
 
     }
 }
