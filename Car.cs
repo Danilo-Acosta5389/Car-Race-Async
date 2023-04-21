@@ -17,5 +17,13 @@ namespace CarRace
         public decimal traveledDistance { get; set; }
         public decimal raceTrackDistance { get; set; }
         public int racingTime { get; set; }
+
+        public decimal RemainingTime()
+        {
+            // X = (Y - 20) * 1.33
+            // Y = done_temperature
+            return ((traveledDistance - 20) * 10) - racingTime;
+        }
+
     }
 }
