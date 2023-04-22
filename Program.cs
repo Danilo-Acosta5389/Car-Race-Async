@@ -6,16 +6,19 @@ namespace CarRace
     {
         static async Task Main(string[] args)
         {
+            decimal raceTime = 0;
+            decimal trackDistance = 10;
+
             Car car1 = new Car()
             {
                 name = "Tokyo Drifter",
                 brand = "Subaru",
                 model = "Impreza",
                 year = 2010,
-                speed = 120,  // km/h
-                traveledDistance = 0,
-                raceTrackDistance = 10.0m,
-                racingTime = 0
+                speed = 120,  // km/h also 33.33 m/s
+                hasTraveledDist = 0, //km
+                raceTrackDistance = trackDistance,
+                racingTime = raceTime
             };
             Car car2 = new Car()
             {
@@ -24,9 +27,9 @@ namespace CarRace
                 model = "Camry",
                 year = 1999,
                 speed = 120, // km/h
-                traveledDistance = 0,
-                raceTrackDistance= 12.0m,
-                racingTime = 0
+                hasTraveledDist = 0, //km
+                raceTrackDistance = trackDistance,
+                racingTime = raceTime
             };
             Car car3 = new Car()
             {
@@ -35,9 +38,9 @@ namespace CarRace
                 model = "Montclair",
                 year = 1957,
                 speed = 120, // km/h
-                traveledDistance = 0,
-                raceTrackDistance = 10.0m,
-                racingTime = 0
+                hasTraveledDist = 0, //km
+                raceTrackDistance = trackDistance,
+                racingTime = raceTime
             };
             Car car4 = new Car()
             {
@@ -46,14 +49,11 @@ namespace CarRace
                 model = "Delorean",
                 year = 1983,
                 speed = 120, // km/h
-                traveledDistance = 0,
-                raceTrackDistance = 12.0m,
-                racingTime = 0
+                hasTraveledDist = 0, //km
+                raceTrackDistance = trackDistance,
+                racingTime = raceTime
             };
-
-
-
-
+           
             Console.WriteLine("\nWelcome to the street race!");
 
             Console.WriteLine("\nPlease press any key to start the race\n");
@@ -61,7 +61,7 @@ namespace CarRace
 
 
             //TODO: Put car methods in variable
-            //      Create a list of tasks, containing the car methods and objects
+            //      Create a list of tasks containing the car methods and objects
             //      The program should only await for the list to run.
 
             var car1Task = CarIsRunning(car1);
@@ -71,39 +71,70 @@ namespace CarRace
 
             var CarStatusTask = CarStatus(new List<Car> { car1, car2, car3, car4 });
 
-            var raceTask = new List<Task> { car1Task, car2Task, car3Task, car4Task, CarStatusTask };
+            var raceTaskList = new List<Task> { car1Task, car2Task, car3Task, car4Task, CarStatusTask };
 
-            while (raceTask.Count > 0)
+            List<Car> raceScoreBoard = new List<Car>();
+
+            while (raceTaskList.Count > 0)
             {
-                Task raceGoalLine = await Task.WhenAny(raceTask);
+                Task raceGoalLine = await Task.WhenAny(raceTaskList);
                 if (raceGoalLine == car1Task)
                 {
-                    Console.WriteLine($"\n {car1.name} made it into goal!");
-                    Car carResult = car1Task.Result;
-                    printCar(carResult);
+                    Console.WriteLine($"\n{car1.name} has passed the goal line");
+                    //Car carResult = car1Task.Result;
+                    //Console.WriteLine(raceTaskList[0].Id);
+                    //printCar(car1);
+                    raceScoreBoard.Add(car1);
+                    if (raceScoreBoard[0] == car1)
+                    {
+                        Console.WriteLine($"{car1.name} Came first place and is the winner!!!");
+                    }
                 }
                 else if (raceGoalLine == car2Task)
                 {
-                    Console.Write($"\n {car2.name} made it into goal!");
-                    Car carResult = car2Task.Result;
-                    printCar(carResult);
+                    Console.WriteLine($"\n{car2.name} has passed the goal line");
+                    //Console.WriteLine(raceTaskList[0].Id);
+                    //printCar(car2);
+                    raceScoreBoard.Add(car2);
+                    if (raceScoreBoard[0] == car2)
+                    {
+                        Console.WriteLine($"{car2.name} Came first place and is the winner!!!");
+                    }
                 }
                 else if (raceGoalLine == car3Task)
                 {
-                    Console.Write($"\n {car3.name} made it into goal!");
-                    Car carResult = car3Task.Result;
-                    printCar(carResult);
+                    Console.WriteLine($"\n{car3.name} has passed the goal line");
+                    //Console.WriteLine(raceTaskList[0].Id);
+                    //printCar(car3);
+                    raceScoreBoard.Add(car3);
+                    if (raceScoreBoard[0] == car3)
+                    {
+                        Console.WriteLine($"{car3.name} Came first place and is the winner!!!");
+                    }
                 }
                 else if (raceGoalLine == car4Task)
                 {
-                    Console.Write($"\n{car4.name} made it into goal!");
-                    Car carResult = car4Task.Result;
-                    printCar(carResult);
+                    Console.WriteLine($"\n{car4.name} has passed the goal line");
+                    //Console.WriteLine(raceTaskList[0].Id);
+                    //printCar(car4);
+                    raceScoreBoard.Add(car4);
+                    if (raceScoreBoard[0] == car4)
+                    {
+                        Console.WriteLine($"{car4.name} Came first place and is the winner!!!");
+                    }
                 }
+
                 await raceGoalLine;
-                raceTask.Remove(raceGoalLine);
+                raceTaskList.Remove(raceGoalLine);
             }
             Console.WriteLine("Race ended.");
+            Console.WriteLine("\nRace Scoreboard: ");
+
+
+            for (int i = 0; i < raceScoreBoard.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {raceScoreBoard[i].name}   Time: {raceScoreBoard[i].racingTime}");
+            }
             Console.WriteLine("\nPlease press any key to close app");
             Console.ReadKey(true);
             //PleasePressEnter();
@@ -112,7 +143,7 @@ namespace CarRace
         static async Task<Car> CarIsRunning(Car car)
         {
             Console.WriteLine($"{car.name} starts running ...");
-            int RaceTime = 10;
+            int RaceTime = 300;
             while (true)
             {
                 await Wait(RaceTime);
@@ -121,11 +152,15 @@ namespace CarRace
                 // Example: every seccond the car runs for x km,
                 // when y km is met return car
 
-                car.traveledDistance += (0.1m * RaceTime);
+
+                //TODO: Add 1 km every 30 second
+
+                //car.traveledDistance += (0.1m * RaceTime);
+                car.hasTraveledDist += 1;
                 car.racingTime += (0.1m * RaceTime);
 
 
-                if (car.traveledDistance >= car.raceTrackDistance)
+                if (car.hasTraveledDist >= car.raceTrackDistance)
                 {
                     return car;
                 }
@@ -134,14 +169,14 @@ namespace CarRace
 
         static async Task Wait(int delay = 10)
         {
-            await Task.Delay(TimeSpan.FromSeconds(delay / 10));
+            await Task.Delay(TimeSpan.FromSeconds(delay / delay));
             //Console.Write(".");
         }
 
         static void printCar(Car car)
         {
             Console.WriteLine($"\n{car.name}\n" +
-                $"Travel distance {car.traveledDistance} km \n" +
+                $"Travel distance {car.hasTraveledDist} km \n" +
                 $"Speed {car.speed} km/h\n" +
                 $"Race time: {car.racingTime} seconds\n");
         }
@@ -153,14 +188,14 @@ namespace CarRace
             {
                 //Maybe create a "Flag" in car object, when car has finished flag = true then break while loop.
 
-                Console.ReadKey(true);
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                //Console.ReadKey(true);
+                await Task.Delay(1000);
                 //Console.Clear();
                 cars.ForEach(car =>
                 {
                     Console.WriteLine($"\n{car.name} has been running for {car.racingTime} seconds");
-                    Console.WriteLine($"Speed is {car.speed} km/h and has traveled a total distance of {car.traveledDistance} km");
-                    if (car.traveledDistance >= car.raceTrackDistance)
+                    Console.WriteLine($"Speed is {car.speed} km/h and has traveled a total distance of {car.hasTraveledDist} km");
+                    if (car.hasTraveledDist >= car.raceTrackDistance)
                     {
                         Console.WriteLine($"{car.name} has stopped\n");
                         carRunning = false;
@@ -176,11 +211,5 @@ namespace CarRace
                 //                     select remaining).Sum();
             }
         }
-
-        //static void PleasePressEnter()
-        //{
-        //    Console.WriteLine("\nPlease press enter");
-        //    while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
-        //}
     }
 }
