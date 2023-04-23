@@ -7,7 +7,7 @@ namespace CarRace
         static async Task Main(string[] args)
         {
             decimal raceTime = 0;
-            decimal trackDistance = 1;
+            decimal trackDistance = 1000; // meters
 
             Car car1 = new Car()
             {
@@ -15,7 +15,7 @@ namespace CarRace
                 brand = "Subaru",
                 model = "Impreza",
                 year = 2010,
-                speed = 120,  // km/h also 33.33 m/s
+                speed = 115,  // km/h also 33.33 m/s
                 hasTraveledDist = 0, //km
                 raceTrackDistance = trackDistance,
                 racingTime = raceTime
@@ -37,7 +37,7 @@ namespace CarRace
                 brand = "Mercury",
                 model = "Montclair",
                 year = 1957,
-                speed = 120, // km/h
+                speed = 110, // km/h
                 hasTraveledDist = 0, //km
                 raceTrackDistance = trackDistance,
                 racingTime = raceTime
@@ -48,7 +48,7 @@ namespace CarRace
                 brand = "DMC",
                 model = "Delorean",
                 year = 1983,
-                speed = 120, // km/h
+                speed = 140, // km/h   //88 mph lol
                 hasTraveledDist = 0, //km
                 raceTrackDistance = trackDistance,
                 racingTime = raceTime
@@ -83,33 +83,33 @@ namespace CarRace
                     Console.WriteLine($"\n{car1.name} has passed the goal line");
                     //Car carResult = car1Task.Result;
                     //Console.WriteLine(raceTaskList[0].Id);
-                    //printCar(car1);
+                    printCar(car1);
                     raceScoreBoard.Add(car1);
-                    FirstCar(raceScoreBoard, car1);
+                    displayWinner(raceScoreBoard, car1);
                 }
                 else if (raceGoalLine == car2Task)
                 {
                     Console.WriteLine($"\n{car2.name} has passed the goal line");
                     //Console.WriteLine(raceTaskList[0].Id);
-                    //printCar(car2);
+                    printCar(car2);
                     raceScoreBoard.Add(car2);
-                    FirstCar(raceScoreBoard, car2);
+                    displayWinner(raceScoreBoard, car2);
                 }
                 else if (raceGoalLine == car3Task)
                 {
                     Console.WriteLine($"\n{car3.name} has passed the goal line");
                     //Console.WriteLine(raceTaskList[0].Id);
-                    //printCar(car3);
+                    printCar(car3);
                     raceScoreBoard.Add(car3);
-                    FirstCar(raceScoreBoard, car3);
+                    displayWinner(raceScoreBoard, car3);
                 }
                 else if (raceGoalLine == car4Task)
                 {
                     Console.WriteLine($"\n{car4.name} has passed the goal line");
                     //Console.WriteLine(raceTaskList[0].Id);
-                    //printCar(car4);
+                    printCar(car4);
                     raceScoreBoard.Add(car4);
-                    FirstCar(raceScoreBoard, car4);
+                    displayWinner(raceScoreBoard, car4);
                 }
 
                 await raceGoalLine;
@@ -131,7 +131,7 @@ namespace CarRace
         static async Task<Car> CarIsRunning(Car car)
         {
             Console.WriteLine($"{car.name} starts running ...");
-            int RaceTime = 300; //seconds
+            int RaceTime = 300; //300 seconds == 5 minutes
             while (true)
             {
                 await Wait(RaceTime);
@@ -151,10 +151,10 @@ namespace CarRace
                 //car.racingTime += (0.1m * RaceTime);
                 car.racingTime += 1;
                 //car.traveledDistance += (0.1m * RaceTime);
-                car.hasTraveledDist += 0.0333333333333333m;
+                car.hasTraveledDist +=  SpeedConverter(car.speed);
 
 
-                if (car.hasTraveledDist == car.raceTrackDistance)
+                if (car.hasTraveledDist >= car.raceTrackDistance)
                 {
                     return car;
                 }
@@ -169,10 +169,12 @@ namespace CarRace
 
         static void printCar(Car car)
         {
+            decimal dist = Math.Round(car.hasTraveledDist, 2);
+            decimal time = Math.Round(car.racingTime, 2);
             Console.WriteLine($"\n{car.name}\n" +
-                $"Travel distance {car.hasTraveledDist} km \n" +
+                $"Travel distance {dist} km \n" +
                 $"Speed {car.speed} km/h\n" +
-                $"Race time: {car.racingTime} seconds\n");
+                $"Race time: {time} seconds\n");
         }
 
         public static async Task CarStatus(List<Car> cars)
@@ -188,8 +190,9 @@ namespace CarRace
                 cars.ForEach(car =>
                 {
                     decimal dist = Math.Round(car.hasTraveledDist, 2);
-                    Console.WriteLine($"\n{car.name} has been running for {car.racingTime} seconds");
-                    Console.WriteLine($"Speed is {car.speed} km/h and has traveled a total distance of {dist} km");
+                    decimal time = Math.Round(car.racingTime, 2);
+                    Console.WriteLine($"\n{car.name} has been running for {time} seconds");
+                    Console.WriteLine($"Speed is {car.speed} km/h and has traveled a total distance of {dist} m");
                     if (car.hasTraveledDist >= car.raceTrackDistance)
                     {
                         Console.WriteLine($"{car.name} has stopped\n");
@@ -200,7 +203,7 @@ namespace CarRace
             }
         }
 
-        public static void FirstCar(List<Car> carList, Car car)
+        public static void displayWinner(List<Car> carList, Car car)
         {
             if (carList[0] == car)
             {
@@ -208,6 +211,13 @@ namespace CarRace
                 Console.WriteLine($"{car.name} Came first place and is the winner!!!");
                 Console.ResetColor();
             }
+        }
+
+        public static decimal SpeedConverter(int speed)
+        {
+            //Devide any speed with 3.6 and get the exact meters per second
+            return (speed / 3.6m);
+
         }
     }
 }

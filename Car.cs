@@ -20,12 +20,12 @@ namespace CarRace
 
         public bool finishedRace { get; set; }
 
-        public decimal CarTraveling()
-        {
-            // X = (Y - 20) * 1.33
-            // Y = done_temperature
-            return ((hasTraveledDist - 20) * 10) - racingTime;
-        }
+        //public decimal CarTraveling()
+        //{
+        //    // X = (Y - 20) * 1.33
+        //    // Y = done_temperature
+        //    return ((hasTraveledDist - 20) * 10) - racingTime;
+        //}
 
     }
 }

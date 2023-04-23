@@ -8,7 +8,8 @@ namespace CarRace
 {
     public class RandomEvent
     {
-        public string eventName { get; set; }
+        public string? eventName { get; set; }
         public int duration { get; set; }
+        public int speedDecrease { get; set; }
     }
 }
