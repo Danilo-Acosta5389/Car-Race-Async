@@ -11,8 +11,31 @@ namespace CarRace
             Car car3 = new Car("\u001b[1m\x1b[32mGreaser\x1b[0m", "Mercury", "Montclair", 1957, 120, 0, 0);
             Car car4 = new Car("\u001b[1m\x1b[34mTime Machine\x1b[0m", "DMC", "Delorean", 1983, 120, 0, 0);
 
-            Console.WriteLine("\nWelcome to the street race!");
+            string title = @"
+                                                                                                         
+      #######                                                    ##### /##                               
+    /       ###                                               ######  / ##                               
+   /         ##   #                                      #   /#   /  /  ##                               
+   ##        #   ##                                     ##  /    /  /   ##                               
+    ###          ##                                     ##      /  /    /                                
+   ## ###      ######## ###  /###     /##       /##   ######## ## ##   /       /###     /###      /##    
+    ### ###   ########   ###/ #### / / ###     / ### ########  ## ##  /       / ###  / / ###  /  / ###   
+      ### ###    ##       ##   ###/ /   ###   /   ###   ##     ## ###/       /   ###/ /   ###/  /   ###  
+        ### /##  ##       ##       ##    ### ##    ###  ##     ## ##  ###   ##    ## ##        ##    ### 
+          #/ /## ##       ##       ########  ########   ##     ## ##    ##  ##    ## ##        ########  
+           #/ ## ##       ##       #######   #######    ##     #  ##    ##  ##    ## ##        #######   
+            # /  ##       ##       ##        ##         ##        /     ##  ##    ## ##        ##        
+  /##        /   ##       ##       ####    / ####    /  ##    /##/      ### ##    /# ###     / ####    / 
+ /  ########/    ##       ###       ######/   ######/   ##   /  ####    ##   ####/ ## ######/   ######/  
+/     #####       ##       ###       #####     #####     ## /    ##     #     ###   ## #####     #####   
+|                                                           #                                            
+ \)                                                          ##                                          
+                                                                                                       ";
 
+            Console.WriteLine("Welcome to the");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"\u001b[5m{title}");
+            Console.ResetColor();
             Console.WriteLine("\nPlease press any key to start the race\n");
             Console.ReadKey(true);
 
@@ -79,7 +102,7 @@ namespace CarRace
         }
 
         //Change sim speed here, 1 simSecond == 1 second
-        static double simSeconds = 0.5;
+        static double simSeconds = 0.1;
         static async Task<Car> CarIsRunning(Car car)
         {
             int tick = 0;
@@ -205,7 +228,7 @@ namespace CarRace
             if (carList[0] == car)
             {
                 //Console.BackgroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"{car.name} \x1b[1m\x1b[33mcame on first place and is the winner!!!\x1b[0m");
+                Console.WriteLine($"\u001b[5m{car.name} \u001b[5m\x1b[1m\x1b[33mcame on first place and is the winner!!!\x1b[0m");
                 //Console.ResetColor();
             }
         }
