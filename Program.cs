@@ -6,83 +6,33 @@ namespace CarRace
     {
         static async Task Main(string[] args)
         {
-            decimal raceTime = 0;
-            decimal trackDistance = 1000; // meters
+            Car car1 = new Car("\u001b[1m\x1b[31mTokyo Drifter\x1b[0m", "Subaru", "Impreza", 2010, 120, 0, 0);
+            Car car2 = new Car("\x1b[1m\x1b[37mSnow-White-My-Queen\x1b[0m", "Toyota", "Camry", 1999, 120, 0, 0);
+            Car car3 = new Car("\u001b[1m\x1b[32mGreaser\x1b[0m", "Mercury", "Montclair", 1957, 120, 0, 0);
+            Car car4 = new Car("\u001b[1m\x1b[34mTime Machine\x1b[0m", "DMC", "Delorean", 1983, 120, 0, 0);
 
-            Car car1 = new Car()
-            {
-                name = "Tokyo Drifter",
-                brand = "Subaru",
-                model = "Impreza",
-                year = 2010,
-                speed = 115,  // km/h also 33.33 m/s
-                hasTraveledDist = 0, //km
-                raceTrackDistance = trackDistance,
-                racingTime = raceTime
-            };
-            Car car2 = new Car()
-            {
-                name = "Snow-White-My-Queen",
-                brand = "Toyota",
-                model = "Camry",
-                year = 1999,
-                speed = 120, // km/h
-                hasTraveledDist = 0, //km
-                raceTrackDistance = trackDistance,
-                racingTime = raceTime
-            };
-            Car car3 = new Car()
-            {
-                name = "Greaser",
-                brand = "Mercury",
-                model = "Montclair",
-                year = 1957,
-                speed = 110, // km/h
-                hasTraveledDist = 0, //km
-                raceTrackDistance = trackDistance,
-                racingTime = raceTime
-            };
-            Car car4 = new Car()
-            {
-                name = "Time Machine",
-                brand = "DMC",
-                model = "Delorean",
-                year = 1983,
-                speed = 140, // km/h   //88 mph lol
-                hasTraveledDist = 0, //km
-                raceTrackDistance = trackDistance,
-                racingTime = raceTime
-            };
-           
             Console.WriteLine("\nWelcome to the street race!");
 
             Console.WriteLine("\nPlease press any key to start the race\n");
             //Console.ReadKey(true);
 
-
-            //TODO: Put car methods in variable
-            //      Create a list of tasks containing the car methods and objects
-            //      The program should only await for the list to run.
-
             var car1Task = CarIsRunning(car1);
             var car2Task = CarIsRunning(car2);
             var car3Task = CarIsRunning(car3);
             var car4Task = CarIsRunning(car4);
-
             var CarStatusTask = CarStatus(new List<Car> { car1, car2, car3, car4 });
-
             List<Task> raceTaskList = new List<Task> { car1Task, car2Task, car3Task, car4Task, CarStatusTask };
-
             List<Car> raceScoreBoard = new List<Car>();
 
+            
             while (raceTaskList.Count > 0)
             {
+                
+                
                 Task raceGoalLine = await Task.WhenAny(raceTaskList);
                 if (raceGoalLine == car1Task)
                 {
                     Console.WriteLine($"\n{car1.name} has passed the goal line");
-                    //Car carResult = car1Task.Result;
-                    //Console.WriteLine(raceTaskList[0].Id);
                     printCar(car1);
                     raceScoreBoard.Add(car1);
                     displayWinner(raceScoreBoard, car1);
@@ -90,7 +40,6 @@ namespace CarRace
                 else if (raceGoalLine == car2Task)
                 {
                     Console.WriteLine($"\n{car2.name} has passed the goal line");
-                    //Console.WriteLine(raceTaskList[0].Id);
                     printCar(car2);
                     raceScoreBoard.Add(car2);
                     displayWinner(raceScoreBoard, car2);
@@ -98,7 +47,6 @@ namespace CarRace
                 else if (raceGoalLine == car3Task)
                 {
                     Console.WriteLine($"\n{car3.name} has passed the goal line");
-                    //Console.WriteLine(raceTaskList[0].Id);
                     printCar(car3);
                     raceScoreBoard.Add(car3);
                     displayWinner(raceScoreBoard, car3);
@@ -106,7 +54,6 @@ namespace CarRace
                 else if (raceGoalLine == car4Task)
                 {
                     Console.WriteLine($"\n{car4.name} has passed the goal line");
-                    //Console.WriteLine(raceTaskList[0].Id);
                     printCar(car4);
                     raceScoreBoard.Add(car4);
                     displayWinner(raceScoreBoard, car4);
@@ -115,44 +62,44 @@ namespace CarRace
                 await raceGoalLine;
                 raceTaskList.Remove(raceGoalLine);
             }
+            
             Console.WriteLine("Race ended.");
-            Console.WriteLine("\n{0,-5}     {1,-30}   {2,-5} ","Place", "Car","Time");
-
+            Console.WriteLine("\n{0,-5}     {1,-30}{2,-4}  mm:ss:ms", "Place", "Car","Time");
             for (int i = 0; i < raceScoreBoard.Count; i++)
             {
-                //Console.WriteLine($"{i + 1}. {raceScoreBoard[i].name} {raceScoreBoard[i].racingTime}");
-                Console.WriteLine("\n {0,-1}.       {1,-30}   {2,-5} s ", i + 1, raceScoreBoard[i].name, raceScoreBoard[i].racingTime);
+                string time = TimeSpan.FromMinutes(raceScoreBoard[i].racingTime).ToString("c");
+                Console.WriteLine("\n {0,-1}.       {1,-40}   {2,-5}", i + 1, raceScoreBoard[i].name, time);
             }
             Console.WriteLine("\nPlease press any key to close app");
             Console.ReadKey(true);
-            //PleasePressEnter();
         }
 
         static async Task<Car> CarIsRunning(Car car)
         {
+            int tick = 0;
+            car.raceTrackDistance = 1000; // meters
             Console.WriteLine($"{car.name} starts running ...");
-            int RaceTime = 300; //300 seconds == 5 minutes
+            //int RaceTime = 300; //300 seconds == 5 minutes
             while (true)
             {
-                await Wait(RaceTime);
+                await Wait(1);
 
-                // TODO: Create a condition that takes time to be met
-                // Example: every second the car runs for x km,
-                // when y km is met return car
+                tick++;
+                if (tick == 5)
+                {
+                    int ranEv = await RandomEvent(car);
+                    if (ranEv == 1) car.racingTime += 30;
+                    else if (ranEv == 2) car.racingTime += 20;
+                    else if (ranEv == 3) car.racingTime += 10;
+                    else if (ranEv == 4) car.speed -= 10;
+                    
+                    //Console.WriteLine("TICK for " + car.name);
+                    tick = 0;
+                }
+                //Console.WriteLine(tick);
 
-
-                //TODO: Add 1 km every 30 second
-                //      OR 0,0333333333333333 km every second
-                //TODO: Add a method that returns amount of time to add
-                //      Make it so it depends on speed of the car
-
-
-
-                //car.racingTime += (0.1m * RaceTime);
                 car.racingTime += 1;
-                //car.traveledDistance += (0.1m * RaceTime);
-                car.hasTraveledDist +=  SpeedConverter(car.speed);
-
+                car.hasTraveledDist += SpeedConverter(car.speed);
 
                 if (car.hasTraveledDist >= car.raceTrackDistance)
                 {
@@ -161,18 +108,20 @@ namespace CarRace
             }
         }
 
-        static async Task Wait(int delay = 10)
+        
+
+        static async Task Wait(int delay)
         {
-            await Task.Delay(TimeSpan.FromSeconds(delay / delay));
+            await Task.Delay(TimeSpan.FromSeconds(delay));
             //Console.Write(".");
         }
 
         static void printCar(Car car)
         {
             decimal dist = Math.Round(car.hasTraveledDist, 2);
-            decimal time = Math.Round(car.racingTime, 2);
+            double time = Math.Round(car.racingTime, 2);
             Console.WriteLine($"\n{car.name}\n" +
-                $"Travel distance {dist} km \n" +
+                $"Travel distance {dist} m \n" +
                 $"Speed {car.speed} km/h\n" +
                 $"Race time: {time} seconds\n");
         }
@@ -185,12 +134,12 @@ namespace CarRace
                 //Maybe create a "Flag" in car object, when car has finished flag = true then break while loop.
 
                 //Console.ReadKey(true);
-                await Task.Delay(1000);
+                await Wait(1);
                 //Console.Clear();
                 cars.ForEach(car =>
                 {
                     decimal dist = Math.Round(car.hasTraveledDist, 2);
-                    decimal time = Math.Round(car.racingTime, 2);
+                    string time = TimeSpan.FromMinutes(car.racingTime).ToString("c");
                     Console.WriteLine($"\n{car.name} has been running for {time} seconds");
                     Console.WriteLine($"Speed is {car.speed} km/h and has traveled a total distance of {dist} m");
                     if (car.hasTraveledDist >= car.raceTrackDistance)
@@ -207,17 +156,60 @@ namespace CarRace
         {
             if (carList[0] == car)
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"{car.name} Came first place and is the winner!!!");
-                Console.ResetColor();
+                //Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"\x1b[1m\x1b[43m{car.name}\x1b[1m\x1b[43m Came first place and is the winner!!!\x1b[0m");
+                //Console.ResetColor();
             }
         }
 
         public static decimal SpeedConverter(int speed)
         {
-            //Devide any speed with 3.6 and get the exact meters per second
+            //Divide any speed with 3.6 and get the exact meters per second
             return (speed / 3.6m);
 
         }
+
+        static async Task<int> RandomEvent(Car car)
+        {
+            RandomEvent event1 = new RandomEvent("Empty tank", "Needs to refuel! Will lose at least 30 seconds on that", 30, 0);
+            RandomEvent event2 = new RandomEvent("Flat tire", "They must change tire. It will cost at least 20 seconds of the race...", 20, 0);
+            RandomEvent event3 = new RandomEvent("Bird on the windshield", "They have to clean that mess up. Will lose 10 seconds at least!", 10, 0);
+            RandomEvent event4 = new RandomEvent("Engine failure", "Will slow the car speed with 10 km/h", 0, 10);
+            
+            Random random = new Random();
+            int chance = random.Next(1, 51);
+
+            if (chance == 1)
+            {
+                Console.WriteLine($"{car.name} is in trouble, seems like an {event1.eventName}. {event1.description}");
+                //event1.duration += car.racingTime;
+                await Wait(3);
+                return 1;
+
+            }
+            else if (chance <= 3)
+            {
+                Console.WriteLine($"{car.name} is in trouble, looks like a {event2.eventName}! {event2.description}");
+                //event1.duration += car.racingTime;
+                await Wait(2);
+                return 2;
+            }
+            else if (chance <= 8)
+            {
+                Console.WriteLine($"{car.name} is in trouble, and there is a {event3.eventName}! {event3.description}");
+                //event1.duration += car.racingTime;
+                await Wait(1);
+                return 3;
+            }
+            else if (chance <= 18)
+            {
+                Console.WriteLine($"{car.name} is in trouble, and it looks like {event4.eventName}. {event4.description}");
+                //event1.speedDecrease -= car.speed;
+                return 4;
+            }
+            else return 0;
+
+        }
+
     }
 }

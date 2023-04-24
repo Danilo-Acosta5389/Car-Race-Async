@@ -14,18 +14,20 @@ namespace CarRace
         public int year { get; set; }
         public int speed { get; set; }
 
-        public decimal hasTraveledDist { get; set; }
+        public decimal hasTraveledDist { get; set; } = 0;
         public decimal raceTrackDistance { get; set; }
-        public decimal racingTime { get; set; }
+        public double racingTime { get; set; }
 
-        public bool finishedRace { get; set; }
 
-        //public decimal CarTraveling()
-        //{
-        //    // X = (Y - 20) * 1.33
-        //    // Y = done_temperature
-        //    return ((hasTraveledDist - 20) * 10) - racingTime;
-        //}
-
+        public Car(string name, string brand, string model, int year, int speed, decimal raceTrackDist, double raceTime) 
+        {
+            this.name = name;
+            this.brand = brand;
+            this.model = model;
+            this.year = year;
+            this.speed = speed;
+            this.raceTrackDistance = raceTrackDist;
+            this.racingTime = racingTime;
+        }
     }
 }
