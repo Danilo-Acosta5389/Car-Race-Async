@@ -13,11 +13,11 @@ namespace CarRace
         public string? model { get; set; }
         public int year { get; set; }
         public int speed { get; set; }
-
+        public int hasFinished { get; set; } = 0;
         public decimal hasTraveledDist { get; set; } = 0;
         public decimal raceTrackDistance { get; set; }
         public double racingTime { get; set; }
-
+        public bool carRunning { get; set; } = true;
 
         public Car(string name, string brand, string model, int year, int speed, decimal raceTrackDist, double raceTime) 
         {
