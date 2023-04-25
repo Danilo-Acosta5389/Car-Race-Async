@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Numerics;
 
 namespace CarRace
 {
@@ -90,19 +92,24 @@ namespace CarRace
                 raceTaskList.Remove(raceGoalLine);
             }
             
-            Console.WriteLine("Race ended.");
-            Console.WriteLine("\n{0,-5}     {1,-30}{2,-4}  mm:ss:ms", "Place", "Car", "Time");
+            Console.WriteLine("\nEnd of Race");
+            Console.WriteLine("\nRace stats");
+            //Console.WriteLine("\n{0,-5}     {1,-20}{2,-4}  mm:ss:ms", "Place", "Car", "Time");
+            Console.WriteLine("\n{0,-5}     {1,-22}{2,-8}{3,-10} {4,-5} (hh:mm:ss) {5,-9} (km/h)", "Place", "Car","Brand","Model","Time","End speed");
             for (int i = 0; i < raceScoreBoard.Count; i++)
             {
                 string time = TimeSpan.FromSeconds(raceScoreBoard[i].racingTime).ToString("c");
-                Console.WriteLine("\n {0,-1}.       {1,-40}   {2,-5}", i + 1, raceScoreBoard[i].name, time);
+                Console.WriteLine("\n {0,-1}.       {1,-35}{2,-8}{3,-10} {4,-5}         {5,-5}", i + 1, raceScoreBoard[i].name, raceScoreBoard[i].brand, raceScoreBoard[i].model, time, raceScoreBoard[i].speed);
             }
             Console.WriteLine("\nPlease press any key to close app");
             Console.ReadKey(true);
         }
 
+
+
+
         //Change sim speed here, 1 simSecond == 1 second
-        static double simSeconds = 0.1;
+        static double simSeconds = 0.2;
         static async Task<Car> CarIsRunning(Car car)
         {
             int tick = 0;
@@ -228,15 +235,27 @@ namespace CarRace
             if (carList[0] == car)
             {
                 //Console.BackgroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"\u001b[5m{car.name} \u001b[5m\x1b[1m\x1b[33mcame on first place and is the winner!!!\x1b[0m");
+                Console.WriteLine($"\n\u001b[5m{car.name} \u001b[5m\x1b[1m\x1b[33mcame on first place and is the winner!!!\x1b[0m\n");
                 //Console.ResetColor();
+            }
+            else if (carList[1] == car)
+            {
+                Console.WriteLine($"\n{car.name} \x1b[1m\x1b[33mcame on second place!\x1b[0m\n");
+            }
+            else if (carList[2] == car)
+            {
+                Console.WriteLine($"\n\u001b[1m\u001b[33mThird place goes to\u001b[0m {car.name}!\n");
+            }
+            else if (carList[3] == car)
+            {
+                Console.WriteLine($"\n\u001b[1m\u001b[33mAnd our sorry *** fourth place goes to\u001b[0m {car.name}\n");
             }
         }
 
         public static decimal SpeedConverter(int speed)
         {
             //Divide any speed with 3.6 and get the exact meters per second
-            return (speed / 3.6m);
+            return speed / 3.6m;
 
         }
 
